@@ -14,7 +14,7 @@ public class ManualAlgo implements PacManAlgo{
         Character cmd = Ex3Main.getCMD();
             if (cmd != null) {
                 if (cmd == 'w') {ans = PacmanGame.UP;}
-                if (cmd == 'x') {ans = PacmanGame.DOWN;}
+                if (cmd == 's') {ans = PacmanGame.DOWN;}
                 if (cmd == 'a') {ans = PacmanGame.LEFT;}
                 if (cmd == 'd') {ans = PacmanGame.RIGHT;}
             }
