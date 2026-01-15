@@ -1,28 +1,38 @@
 package my_game;
 
+/**
+ * Runs the game using Ex3Algo (no keyboard control).
+ */
 public class MyMain {
+
     public static void main(String[] args) {
+
         int code = 0;
 
-        MyPacmanGame g = new MyPacmanGame();
-        g.init(code, "level4", true, 1234L, 0.1, 0, 0);
-        g.play();
+        MyPacmanGame game = new MyPacmanGame();
 
-        MyGui gui = new MyGui();
+        String level = "level4";
+        boolean cyclic = true;
+        long seed = 1L;
+        double dt = 0.1;
 
-        while (g.getStatus() == PacManGame.PLAY || g.getStatus() == PacManGame.INIT) {
-            // פה בעתיד תכניס את האלגו שלך:
-            // int dir = algo.move(g);
-            // g.setPacmanDirection(dir);
+        game.init(code, level, cyclic, seed, dt, 0, 0);
 
-            // כרגע: נעמוד במקום
-            g.setPacmanDirection(PacManGame.STAY);
+        // connect algo
+        game.setAlgo(code, new Ex3Algo());
 
-            g.move(code);
-            gui.render(g, code);
+        game.play();
 
-            StdDraw.pause(40); // ~25 FPS
+        MyGui gui = new MyGui(game, code);
+
+        while (game.getStatus() != PacManGame.DONE && game.getStatus() != PacManGame.ERR) {
+            game.move(code);   // engine calls algo internally now ✅
+            gui.draw();
+
+            StdDraw.pause(30);
         }
-        System.out.println("Game ended: " + g.end(code));
+
+        System.out.println(game.getData(code));
+        System.out.println(game.end(code));
     }
 }

@@ -83,7 +83,7 @@ public class Ex3Algo implements PacManAlgo {
      * Block GREEN for first ~10 seconds.
      * Assumption: ~10 ticks/sec => 10 sec ≈ 100 ticks.
      */
-    private static final int NO_POWER_FIRST_TICKS = 50;
+    private static final int NO_POWER_FIRST_TICKS = 3;
 
     /**
      * Memory of recent positions to break loops.
