@@ -1,7 +1,7 @@
 package my_game;
 
 /**
- * Runs the game using Ex3Algo (no keyboard control).
+ * Runs the game using Ex3Algo (no keyboard control).//
  */
 public class MyMain {
 
