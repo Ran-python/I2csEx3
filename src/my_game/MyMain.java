@@ -29,7 +29,7 @@ public class MyMain {
             game.move(code);   // engine calls algo internally now ✅
             gui.draw();
 
-            StdDraw.pause(30);
+            StdDraw.pause(50);
         }
 
         System.out.println(game.getData(code));

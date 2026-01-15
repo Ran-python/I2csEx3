@@ -11,8 +11,8 @@ public class MyPacmanGame implements PacManGame {
     public static final int WALL  = -999; // wall
 
     // ===== Tuning =====
-    private static final double POWER_DURATION = 6.0;   // seconds (time units)
-    private static final double RESPAWN_DELAY  = 1.2;   // how long ghost disappears after eaten
+    private static final double POWER_DURATION = 7.0;   // seconds (time units)
+    private static final double RESPAWN_DELAY  = 7.0;   // how long ghost disappears after eaten
     private static final int GHOST_EAT_SCORE = 50;
     private static final int DOT_SCORE = 1;
     private static final int POWER_SCORE = 5;
@@ -23,6 +23,8 @@ public class MyPacmanGame implements PacManGame {
 
     private int[][] board;
     private int w, h;
+
+    private int tick = 0;
 
     private int pacX, pacY;
     private int score = 0;
@@ -191,11 +193,29 @@ public class MyPacmanGame implements PacManGame {
             setPacmanDirection(dir);
         }
 
+        // ===== save previous positions (for swap collision) =====
+        int pacPrevX = pacX, pacPrevY = pacY;
+
+        int[] gPrevX = new int[ghosts.length];
+        int[] gPrevY = new int[ghosts.length];
+        for (int i = 0; i < ghosts.length; i++) {
+            if (ghosts[i] == null) {
+                gPrevX[i] = Integer.MIN_VALUE;
+                gPrevY[i] = Integer.MIN_VALUE;
+            } else {
+                gPrevX[i] = ghosts[i].getX();
+                gPrevY[i] = ghosts[i].getY();
+            }
+        }
+
         // move pacman
         stepPacman();
 
         // eat dot/power
         eatAtPacman();
+
+        tick++;
+        boolean moveGhostsThisTick = (tick % 2 == 0);
 
         // tick ghost eatable + respawn timers
         for (int i = 0; i < ghosts.length; i++) {
@@ -212,13 +232,15 @@ public class MyPacmanGame implements PacManGame {
         }
 
         // move ghosts
-        for (int i = 0; i < ghosts.length; i++) {
-            if (ghosts[i] == null) continue;
-            ghosts[i].step(this, pacX, pacY);
+        if (moveGhostsThisTick) {
+            for (int i = 0; i < ghosts.length; i++) {
+                if (ghosts[i] == null) continue;
+                ghosts[i].step(this, pacX, pacY);
+            }
         }
 
-        // collisions
-        if (handleCollisions()) {
+        // collisions (with swap detection)
+        if (handleCollisions(pacPrevX, pacPrevY, gPrevX, gPrevY)) {
             status = DONE;
             return "LOSE score=" + score;
         }
@@ -231,6 +253,7 @@ public class MyPacmanGame implements PacManGame {
 
         return "OK score=" + score;
     }
+
 
     private void stepPacman() {
         int dir = pendingPacDir;
@@ -263,21 +286,30 @@ public class MyPacmanGame implements PacManGame {
         }
     }
 
-    // ✅ THIS IS THE IMPORTANT FIX: ghost disappears (null) when eaten
-    private boolean handleCollisions() {
+    // ✅ collision with SAME CELL + SWAP (cross) detection
+    private boolean handleCollisions(int pacPrevX, int pacPrevY, int[] gPrevX, int[] gPrevY) {
+
         for (int i = 0; i < ghosts.length; i++) {
             MyGhost g = ghosts[i];
-            if (g == null) continue;               // eaten -> not in game now
-            if (respawnTimers[i] > 0) continue;    // just in case
+            if (g == null) continue;
+            if (respawnTimers[i] > 0) continue;
 
-            if (g.getX() == pacX && g.getY() == pacY) {
+            int gx = g.getX(), gy = g.getY();
+            int prevGX = gPrevX[i], prevGY = gPrevY[i];
+
+            boolean sameCell = (gx == pacX && gy == pacY);
+
+            // swap: Pacman moved into ghost's previous cell AND ghost moved into pacman's previous cell
+            boolean swapped =
+                    (prevGX != Integer.MIN_VALUE) &&
+                            (pacX == prevGX && pacY == prevGY) &&
+                            (gx == pacPrevX && gy == pacPrevY);
+
+            if (sameCell || swapped) {
                 if (g.remainTimeAsEatable(0) > 0) {
                     score += GHOST_EAT_SCORE;
-
-                    // remove ghost and schedule respawn
                     ghosts[i] = null;
                     respawnTimers[i] = RESPAWN_DELAY;
-
                 } else {
                     return true; // pacman dies
                 }
@@ -285,6 +317,7 @@ public class MyPacmanGame implements PacManGame {
         }
         return false;
     }
+
 
     private boolean hasDotsOrPower() {
         for (int x = 0; x < w; x++) {

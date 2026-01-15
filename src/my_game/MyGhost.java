@@ -10,7 +10,6 @@ public class MyGhost implements GhostCL {
     private int x, y;
     private double eatableTime = 0.0;
 
-    // ✅ חדש: מצב "מת" + טיימר לחזרה
     private boolean dead = false;
     private double respawnTimer = 0.0;
     private int spawnX, spawnY;
