@@ -141,7 +141,7 @@ Responsibilities:
 ✔ Fully standalone Pac-Man server  
 ✔ Algorithm-compatible without modification  
 ✔ Clean OOP design and separation of concerns  
-✔ Cyclic maps, power pellets, ghost AI  
+✔ Cyclic maps, power pellets, ghost 
 ✔ Server-authoritative architecture  
 
 This project demonstrates:
