@@ -5,48 +5,32 @@ This project is a **full standalone implementation of the Pac-Man game server**,
 
 Course: Introduction to Computer Science Institution: Ariel University, School of Computer Science Year: 2026
 
-The system preserves **full compatibility with the lecturer’s algorithm interface**, while replacing:
+The system preserves **full compatibility with the lecturer’s interface**, while replacing:
 - The game engine
 - Board handling
 - Ghost logic
 - Power mechanics
 - GUI rendering
 
-The result is a **clean, extensible, server-authoritative Pac-Man implementation** that can run the lecturer’s algorithm unchanged.
-
 ---
 
-##  Part 1 – Algorithm Integration (`Ex3Algo`)
+## Part 1 – Algorithm Development (Ex3Algo)
 
-###  Goal
-The goal was to execute the lecturer’s provided algorithm (`Ex3Algo`) **without modifying it**, while running on a **completely custom game engine**.
+### Goal
+The objective was to create an intelligent agent capable of maximizing score while navigating complex mazes and avoiding dynamic threats in real-time.
 
-### Core Design Principle
-Instead of adapting the algorithm, the project **reimplements the `PacManGame` interface** exactly as expected by the course API.
+### Advanced Logic & Mechanics
+The code implements several high-level strategies to handle edge cases and optimize performance:
 
-This ensures:
-- Full compatibility
-- Zero changes to the algorithm
-- Correct behavior according to course rules
-
-###  How the Integration Works
-- `MyPacmanGame` implements `PacManGame`
-- On every game tick:
-  1. The engine calls `algo.move(this)`
-  2. The algorithm returns a direction (`UP / DOWN / LEFT / RIGHT / STAY`)
-  3. The engine applies the move internally
-- The algorithm never mutates game state directly
-
-###  Compatibility Guarantees
-The following expectations of the lecturer’s algorithm are preserved:
-- `getGame()` returns `int[][]`
-- `getPos()` returns `"x,y"`
-- `getGhosts()` returns `GhostCL[]`
-- Direction constants are identical
-- `UP` increases Y (critical for correctness)
-
-**Result:**  
-Any valid Ex3 algorithm can run on this server **unchanged**.
+* **Breadth-First Search (BFS) Engine:** The core of the movement logic. It calculates the shortest path to targets (`DOT`, `POWER`) while considering walls and "danger zones" created by ghosts.
+* **Strategic Power Policy (Power Lock):** * To prevent wasting power pellets, the algorithm implements a "Lock": it avoids stepping on `GREEN` pellets if it's already in Power Mode or during the first 5 seconds of the game (`NO_POWER_FIRST_TICKS`).
+* **Heuristic Scoring & Tie-Breaking:** When multiple targets are at the same distance, the algorithm scores them based on:
+    * **Threat Level:** Distance to the nearest danger ghost.
+    * **Exits:** Favoring tiles with more escape routes to avoid traps.
+    * **Directional Bias:** Prefers continuing in the current direction to maintain momentum.
+* **Loop & Stuck Prevention:** * **Position Memory:** Uses an `ArrayDeque` to store recent positions. If it detects a loop, it forces a different legal move.
+    * **Anti-Reverse:** Prevents Pac-Man from oscillating between two tiles by penalizing immediate 180-degree turns.
+* **Ghost Hunting (Chase Mode):** In Power Mode, it calculates if an eatable ghost is reachable before the timer expires, using a safety margin (`EATABLE_TIME_MARGIN`).
 
 ---
 
