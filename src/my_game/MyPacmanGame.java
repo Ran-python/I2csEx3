@@ -12,7 +12,7 @@ public class MyPacmanGame implements PacManGame {
 
     // ===== Tuning =====
     private static final double POWER_DURATION = 7.0;   // seconds (time units)
-    private static final double RESPAWN_DELAY  = 7.0;   // how long ghost disappears after eaten
+    private static final double RESPAWN_DELAY  = 3.5;   // how long ghost disappears after eaten
     private static final int GHOST_EAT_SCORE = 50;
     private static final int DOT_SCORE = 1;
     private static final int POWER_SCORE = 5;
@@ -36,7 +36,7 @@ public class MyPacmanGame implements PacManGame {
     private int ghostType = GhostCL.RANDOM_WALK0;
 
     private MyGhost[] ghosts = new MyGhost[0];
-    private double[] respawnTimers = new double[0]; // ✅ if >0 -> ghost is currently "gone"
+    private double[] respawnTimers = new double[0];
 
     // manual key (optional)
     private Character lastKey = null;
@@ -99,7 +99,6 @@ public class MyPacmanGame implements PacManGame {
     }
 
     private void loadLevel4() {
-        // ⚠️ חובה: כל השורות ייעשו אותו אורך אוטומטית ע״י fromAsciiSafe
         String[] rows = {
                 "#############################",
                 "#...........##.............##",
@@ -135,7 +134,7 @@ public class MyPacmanGame implements PacManGame {
     }
 
     /**
-     * ✅ SAFE builder:
+     * SAFE builder:
      * - makes map rectangular by padding short rows with '#'
      * - reverses y so UP means y+1
      */
@@ -286,7 +285,7 @@ public class MyPacmanGame implements PacManGame {
         }
     }
 
-    // ✅ collision with SAME CELL + SWAP (cross) detection
+    // collision with SAME CELL + SWAP (cross) detection
     private boolean handleCollisions(int pacPrevX, int pacPrevY, int[] gPrevX, int[] gPrevY) {
 
         for (int i = 0; i < ghosts.length; i++) {

@@ -10,6 +10,11 @@ public class MyGui {
     private int w = -1;
     private int h = -1;
 
+    private int lastPacX = Integer.MIN_VALUE;
+    private int lastPacY = Integer.MIN_VALUE;
+    private double pacAngle = 0.0; // rotation in degrees
+
+
     private final String pacImg = "p1.png";
     private final String[] ghostImgs = {"g0.png", "g1.png", "g2.png", "g3.png"};
 
@@ -69,9 +74,27 @@ public class MyGui {
 
     private void drawPacman() {
         int[] p = parseXY(game.getPos(code));
-        double px = p[0] + 0.5;
-        double py = p[1] + 0.5;
-        StdDraw.picture(px, py, pacImg, 1.0, 1.0);
+        int x = p[0];
+        int y = p[1];
+
+        // קביעת כיוון לפי תזוזה
+        if (lastPacX != Integer.MIN_VALUE) {
+            int dx = x - lastPacX;
+            int dy = y - lastPacY;
+
+            if (dx > 0) pacAngle = 0;        // RIGHT
+            else if (dx < 0) pacAngle = 180; // LEFT
+            else if (dy > 0) pacAngle = 90;  // UP
+            else if (dy < 0) pacAngle = -90; // DOWN
+        }
+
+        lastPacX = x;
+        lastPacY = y;
+
+        double px = x + 0.5;
+        double py = y + 0.5;
+
+        StdDraw.picture(px, py, pacImg, 1.0, 1.0, pacAngle);
     }
 
     private void drawGhosts() {

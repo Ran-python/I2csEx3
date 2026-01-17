@@ -4,7 +4,7 @@ package my_game;
  * Runs the game using Ex3Algo (no keyboard control).//
  */
 public class MyMain {
-
+    private static Character _cmd;
     public static void main(String[] args) {
 
         int code = 0;
@@ -26,7 +26,7 @@ public class MyMain {
         MyGui gui = new MyGui(game, code);
 
         while (game.getStatus() != PacManGame.DONE && game.getStatus() != PacManGame.ERR) {
-            game.move(code);   // engine calls algo internally now ✅
+            game.move(code);
             gui.draw();
 
             StdDraw.pause(50);

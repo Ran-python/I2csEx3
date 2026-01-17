@@ -11,11 +11,6 @@ import java.awt.Color;
  *   PINK  -> DOT
  *   GREEN -> POWER
  *
- * IMPORTANT:
- * Your MyPacmanGame currently uses:
- *   DOT   = 10
- *   POWER = 11
- * So we map those colors to 10/11 to keep compatibility with your algorithm.
  */
 public final class Game {
 

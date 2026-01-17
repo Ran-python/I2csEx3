@@ -23,4 +23,6 @@ public interface PacManAlgo {
      * @return one of PacManGame.UP/DOWN/LEFT/RIGHT/STAY
      */
     int move(PacManGame game);
+
+    //int move(MyPacmanGame game);
 }

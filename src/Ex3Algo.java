@@ -71,7 +71,7 @@ public class Ex3Algo implements PacManAlgo {
     /**
      * Small opening phase: start moving to avoid idling.
      */
-    private static final int OPENING_STEPS = 25;
+    private static final int OPENING_STEPS = 25 ;
 
 
     /** In power mode: if ghost is within this distance, strongly prioritize eating it. */

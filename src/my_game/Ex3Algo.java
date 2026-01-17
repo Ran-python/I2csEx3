@@ -198,6 +198,8 @@ public class Ex3Algo implements PacManAlgo {
         return chosen;
     }
 
+
+
     // ===================== PRIORITY 1: ESCAPE =====================
 
     /**
