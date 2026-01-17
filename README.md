@@ -3,6 +3,8 @@
 ## Overview
 This project is a **full standalone implementation of the Pac-Man game server**, built entirely from scratch without relying on the lecturer’s provided executable (`exe.ex3`).
 
+Course: Introduction to Computer Science Institution: Ariel University, School of Computer Science Year: 2026
+
 The system preserves **full compatibility with the lecturer’s algorithm interface**, while replacing:
 - The game engine
 - Board handling
@@ -27,7 +29,7 @@ This ensures:
 - Zero changes to the algorithm
 - Correct behavior according to course rules
 
-### 🔁 How the Integration Works
+###  How the Integration Works
 - `MyPacmanGame` implements `PacManGame`
 - On every game tick:
   1. The engine calls `algo.move(this)`
@@ -54,7 +56,7 @@ The `my_game` package contains the **entire Pac-Man server**, implemented indepe
 
 ---
 
-## 🟡 MyPacmanGame – Core Game Server
+##  MyPacmanGame – Core Game Server
 
 ### Responsibilities
 `MyPacmanGame` is the **authoritative game server**.  
