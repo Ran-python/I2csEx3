@@ -17,22 +17,68 @@ The system preserves **full compatibility with the lecturer’s interface**, whi
 ## Part 1 – Algorithm Development (Ex3Algo)
 
 ### Goal
-The objective was to create an intelligent agent capable of maximizing score while navigating complex mazes and avoiding dynamic threats in real-time.
-
-### Advanced Logic & Mechanics
-The code implements several high-level strategies to handle edge cases and optimize performance:
-
-* **Breadth-First Search (BFS) Engine:** The core of the movement logic. It calculates the shortest path to targets (`DOT`, `POWER`) while considering walls and "danger zones" created by ghosts.
-* **Strategic Power Policy (Power Lock):** * To prevent wasting power pellets, the algorithm implements a "Lock": it avoids stepping on `GREEN` pellets if it's already in Power Mode or during the first 5 seconds of the game (`NO_POWER_FIRST_TICKS`).
-* **Heuristic Scoring & Tie-Breaking:** When multiple targets are at the same distance, the algorithm scores them based on:
-    * **Threat Level:** Distance to the nearest danger ghost.
-    * **Exits:** Favoring tiles with more escape routes to avoid traps.
-    * **Directional Bias:** Prefers continuing in the current direction to maintain momentum.
-* **Loop & Stuck Prevention:** * **Position Memory:** Uses an `ArrayDeque` to store recent positions. If it detects a loop, it forces a different legal move.
-    * **Anti-Reverse:** Prevents Pac-Man from oscillating between two tiles by penalizing immediate 180-degree turns.
-* **Ghost Hunting (Chase Mode):** In Power Mode, it calculates if an eatable ghost is reachable before the timer expires, using a safety margin (`EATABLE_TIME_MARGIN`).
+Design a Pac-Man agent that **maximizes score by eating DOTs efficiently**, while responding correctly to nearby ghosts and avoiding infinite loops or corner-sticking.
 
 ---
+
+### Core Strategy
+The algorithm runs once per game tick and chooses the next move using **Breadth-First Search (BFS) distance maps** combined with a **heuristic scoring function** over the four possible directions.
+
+---
+
+### Distance Maps (BFS Engine)
+Each tick, the algorithm builds three multi-source BFS maps:
+
+- **DOT Distance (`dotDist`)** – shortest path to the nearest pink DOT  
+- **POWER Distance (`powDist`)** – shortest path to the nearest green POWER  
+- **Danger Distance (`dangerDist`)** – shortest path to the nearest *danger* ghost  
+  (ghosts with `remainTimeAsEatable(code) <= 0`)
+
+Walls are detected using the **BLUE** tile value.
+
+---
+
+### Decision Logic
+- **DOT-First Policy**  
+  Pac-Man always prioritizes moving toward DOTs.
+
+- **POWER Usage**  
+  POWER is selected only when:
+  - No DOTs are reachable
+  - POWER is very close
+  - A danger ghost is nearby and POWER provides a safer option
+
+- **Escape Mode**  
+  If a danger ghost is closer than `ESCAPE_TRIGGER`, Pac-Man switches to escape mode and prioritizes:
+  - Increasing distance from ghosts
+  - Moving through tiles with more exits (junctions)
+
+---
+
+### Move Scoring & Tie-Breaking
+When multiple legal moves exist, each move is scored using:
+- DOT distance reduction (main factor)
+- Immediate reward (standing on DOT / POWER)
+- Number of exits (trap avoidance)
+- Light safety shaping (only when danger is near)
+
+---
+
+### Loop & Stuck Prevention
+- Recent positions are stored in a small memory queue
+- Returning to recent tiles is penalized
+- If Pac-Man gets stuck, it forces DOT progress when safe
+
+---
+
+### Summary
+This algorithm is **aggressive, score-oriented, and stable**:
+- Eats DOTs quickly
+- Escapes only when necessary
+- Avoids corner camping and infinite loops
+
+
+- - -
 
 ##  Part 2 – `my_game` Package (Custom Server Implementation)
 
