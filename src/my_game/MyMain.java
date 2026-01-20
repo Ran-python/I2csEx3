@@ -29,7 +29,7 @@ public class MyMain {
             game.move(code);
             gui.draw();
 
-            StdDraw.pause(50);
+            StdDraw.pause(120);
         }
 
         System.out.println(game.getData(code));

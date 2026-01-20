@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="I2csEx3:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/I2csEx3_jar</output-path>
+    <root id="archive" name="I2csEx3.jar">
+      <element id="module-output" name="I2csEx3" />
+      <element id="library" level="project" name="Ex3_v09e.jar-out (2)" />
+    </root>
+  </artifact>
+</component>
